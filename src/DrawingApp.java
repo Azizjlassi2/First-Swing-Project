@@ -11,7 +11,7 @@ import java.awt.image.BufferedImage;
 
 /**
  *
- * @author epi.ds
+ * @author Jlassi Mohamed Aziz
  */
 public class DrawingApp extends JComponent implements MouseMotionListener,MouseListener {
     private JFrame fen;
@@ -47,6 +47,15 @@ public class DrawingApp extends JComponent implements MouseMotionListener,MouseL
         p1.add(b3);
         p1.add(b4);
         p1.add(b5);
+
+        for (Component component : p1.getComponents()) {
+            component.addMouseListener(new MouseAdapter() {
+                public void mouseClicked(MouseEvent e){
+                    couleur = component.getBackground();
+                }
+            });
+            
+        };
         
         
         
@@ -62,9 +71,28 @@ public class DrawingApp extends JComponent implements MouseMotionListener,MouseL
         p2.add(t3);
         p2.add(t5);
         p2.add(t12);
+
+
+        for (Component component : p2.getComponents()) {
+            component.addMouseListener(new MouseAdapter() {
+                public void mouseClicked(MouseEvent e){
+                    System.out.println(component);
+                }
+            });
+            
+        };
         JButton effacer = new JButton("Clear");
         effacer.setBackground(Color.WHITE);
         p2.add(effacer);
+
+        effacer.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e){
+                g2d.setColor(Color.WHITE);
+                g2d.fillRect(x, y, canvas.getWidth(), canvas.getHeight());
+                g2d.setColor(couleur);
+                repaint();
+            }
+        });
         
         
         JPanel p3 = new JPanel(new GridLayout(2,1));
@@ -81,7 +109,9 @@ public class DrawingApp extends JComponent implements MouseMotionListener,MouseL
         g2d = canvas.createGraphics();
         g2d.setColor(Color.white);
         g2d.fillRect(0, 0,canvas.getWidth(), canvas.getHeight());
-        g2d.setColor(couleur);
+        g2d.setColor(Color.white);
+        this.addMouseListener(this);
+        this.addMouseMotionListener(this);
 
 
 
@@ -97,11 +127,20 @@ public class DrawingApp extends JComponent implements MouseMotionListener,MouseL
     
     @Override
     public void mousePressed(MouseEvent e) {
+        x = e.getX();
+        y = e.getY();
     }
     
     
     @Override
     public void mouseDragged(MouseEvent e) {
+        g2d.setColor(couleur);
+        g2d.setStroke(new BasicStroke(taille));
+        g2d.drawLine(x, y, e.getX(), e.getY());
+        x = e.getX();
+        y = e.getY();
+        repaint();
+
     }
 
 
